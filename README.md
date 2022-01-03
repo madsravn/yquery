@@ -53,4 +53,11 @@ cargo install --git https://github.com/madsravn/yquery.git yquery
 
 [rust]: https://www.rust-lang.org
 
+## Common Issues
+
+Some issues can arise from the grammar I made to parse the search query. If you are in doubt whether or not your query was understood correctly, run the program with a third parameter. Then it will output how it understands your search query.
+
+## Copyright and License
+
+This tool and its source is licensed under [GNU GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html)
 
