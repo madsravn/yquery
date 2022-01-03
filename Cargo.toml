@@ -9,6 +9,7 @@ keywords = ["yaml", "query", "tool"]
 categories = ["command-line-utilities"]
 include = ["src/", "documents/", "GPLv3-license"]
 repository = "https://github.com/madsravn/yquery"
+description = "yquery is a yaml-query command-line utility based on the idea of jquery"
 
 [dependencies]
 
