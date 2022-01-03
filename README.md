@@ -28,7 +28,7 @@ A 'search query' consists of three parts: A element name, a child specifier and 
 
 Example with no id specifier
 ```console
-mads@Adria][~/projects/yquery]% yquery documents/verify_apache.yaml "service"
+[mads@Adria][~/projects/yquery]% yquery documents/verify_apache.yaml "service"
 service: { name: httpd, state: started}
 service: { name: httpd, state: restarted}
 ```
