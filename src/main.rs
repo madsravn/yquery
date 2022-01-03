@@ -133,10 +133,14 @@ fn run(path: &str, input: &str, debug: bool) -> Vec<String> {
 // TODO: Implement clap
 fn main() {
     let args: Vec<_> = env::args().collect();
-    let verbose = args.len() > 3;
-    let results = run(&args[1], &args[2], verbose);
-    for result in results {
-        println!("{}", result);
+    if args.len() < 2 {
+        println!("Usage: Program requires two arguments. First argument is file and second argument is search query.");
+    } else {
+        let verbose = args.len() > 3;
+        let results = run(&args[1], &args[2], verbose);
+        for result in results {
+            println!("{}", result);
+        }
     }
 }
 
