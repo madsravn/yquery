@@ -92,4 +92,28 @@ fn main() {
     }
 }
 
-// TODO: TESTS
+#[cfg(test)]
+mod tests {
+    use super::*;
+    #[test]
+    fn test_simple_search_query() {
+        let simple_query = "service";
+        let document = "documents/verify_apache.yaml";
+        let result = run(document, simple_query, false);
+        let assumed_result = vec!["service: { name: httpd, state: started}", "service: { name: httpd, state: restarted}"];
+        let matching = result.iter().zip(&assumed_result).filter(|&(a, b)| a == b).count();
+        assert_eq!(matching, 2);
+    }
+    
+    #[test]
+    fn test_simple_search_query_with_id() {
+        let simple_query = "service.name";
+        let document = "documents/verify_apache.yaml";
+        let result = run(document, simple_query, false);
+        let assumed_result = vec!["httpd", "httpd"];
+        let matching = result.iter().zip(&assumed_result).filter(|&(a, b)| a == b).count();
+        assert_eq!(matching, 2);
+    }
+
+}
+
