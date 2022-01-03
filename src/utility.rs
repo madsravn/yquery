@@ -38,4 +38,19 @@ mod tests {
         assert_eq!(c_test, false);
     }
 
+    #[test]
+    fn contains_keys_work() {
+        let vec = vec![String::from("foo"), String::from("bar")];
+        let map = HashMap::from([(String::from("foo"), String::from("1")), (String::from("bar"), String::from("2")), (String::from("baz"), String::from("3"))]);
+        let c_test = contains_keys(&vec, &map);
+        assert_eq!(c_test, true);
+    }
+
+    #[test]
+    fn contains_keys_reject() {
+        let vec = vec![String::from("foo"), String::from("zoom")];
+        let map = HashMap::from([(String::from("foo"), String::from("1")), (String::from("bar"), String::from("2")), (String::from("baz"), String::from("3"))]);
+        let c_test = contains_keys(&vec, &map);
+        assert_eq!(c_test, false);
+    }
 }
