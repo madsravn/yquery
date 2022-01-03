@@ -14,29 +14,36 @@ yquery is a program which finds elements in your yaml documents using selectors.
 
 - [Features](#features)
 - [Installation](#installation)
-- [Configuration](#configuration)
-- [How to use Tokei](#how-to-use-tokei)
-- [Options](#options)
-- [Badges](#badges)
-- [Supported Languages](#supported-languages)
-- [Changelog](CHANGELOG.md)
 - [Common Issues](#common-issues)
-- [Canonical Source](#canonical-source)
 - [Copyright and License](#copyright-and-license)
 
 
 ## Features
 
-yquery is ... blah blah blah
+yquery is a command-line tool which currently accepts one file and a 'search query'. It will then search through the document looking for elements of the document which adhere to the search query. I am currently working on multi-file support so you can search directories as well.
 
+### Examples
+
+A 'search query' consists of three parts: A element name, a child specifier and id selection. It is given in the form `ElementA[childname=name].id`. You can have multiple occurrences of each part: `(ElementA|ElementB)[childname=name,childage=age].(id,name)`. If only the element name part is given, the output will the entire element found, as seen in the first example below. If the id selection part is specified, you will only receive those specifically, as seen in the second example below.
+
+Example with no id specifier
+```console
+mads@Adria][~/projects/yquery]% yquery documents/verify_apache.yaml "service"
+service: { name: httpd, state: started}
+service: { name: httpd, state: restarted}
+```
+
+
+Example with id specifier set
+```console
+[mads@Adria][~/projects/yquery]% yquery documents/verify_apache.yaml "service.name"
+httpd
+httpd
+```
 
 ## Installation
 
-Currently yquery does not reside in any package manager that I know of. So in order to install it you need to download a prebuilt binary release or built it yourself.
-
-### Downloading
-You can download prebuilt binaries in the
-[releases section](https://github.com/XAMPPRocky/tokei/releases).
+Currently yquery does not reside in any package manager that I know of. So in order to install it you need to build the tool yourself.
 
 ### Building
 You can also build and install from source (requires the latest stable [Rust] compiler.)
