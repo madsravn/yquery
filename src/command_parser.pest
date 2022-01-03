@@ -1,0 +1,23 @@
+char = { 'a'..'z' | 'A'..'Z' }
+separator = { "|" }
+comma = { "," }
+space = { " " }
+
+char_with_number = { char | ASCII_DIGIT | "_" }
+chars_with_numbers = { char_with_number+ }
+char_equal = { chars_with_numbers ~ "=" ~ chars_with_numbers | comma }
+chars = { char+ }
+
+
+value = { chars | separator }
+id_value = { chars | comma | space } // Is this a pretty solution with the space? 
+fields = { "(" ~ value+ ~ ")" | value } // This could probably be done smarter. 
+
+
+equal_value = { char_equal+ | comma }
+specifiers = { "[" ~ equal_value+ ~ "]" }
+
+value_with_comma = { value | comma }
+ids = { ".(" ~ id_value+ ~ ")" | "." ~ id_value }
+
+complete = { fields ~ specifiers? ~ ids? }
