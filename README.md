@@ -1,7 +1,7 @@
 # yquery
 
-![example workflow](https://github.com/madsravn/yquery/actions/workflows/rust.yml/badge.svg)
-[![crates.io](https://img.shields.io/crates/d/yquery.svg)](https://crates.io/crates/yquery)
+[![Build status](https://img.shields.io/github/workflow/status/madsravn/yquery/Rust/master)](https://github.com/masdravn/yquery)
+[![crates.io](https://img.shields.io/crates/v/yquery.svg)](https://crates.io/crates/yquery)
 [![Documentation](https://docs.rs/yquery/badge.svg)](https://docs.rs/yquery/)
 
 yquery is a program which finds elements in your yaml documents using selectors. Sort of like how jquery works for css.
