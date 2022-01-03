@@ -1,6 +1,6 @@
 # yquery
 
-Workflow
+![example workflow](https://github.com/madsravn/yquery/actions/workflows/rust.yml/badge.svg)
 [![crates.io](https://img.shields.io/crates/d/yquery.svg)](https://crates.io/crates/yquery)
 [![Documentation](https://docs.rs/yquery/badge.svg)](https://docs.rs/yquery/)
 
