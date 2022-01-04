@@ -7,7 +7,7 @@ pub mod utility;
 pub mod yaml_handler;
 use parse_grammar::parse_input_specifier;
 use utility::{contains, contains_keys};
-use yaml_handler::{find_hashmapped_values, look_for, pretty_print, NamedDocument};
+use yaml_handler::{find_hashmapped_values, look_for, pretty_print, NamedDocument, post_process};
 
 extern crate pest;
 extern crate pest_derive;
@@ -59,6 +59,15 @@ fn run(path: &str, input: &str, debug: bool) -> Vec<String> {
     let docs = yaml::YamlLoader::load_from_str(&content).expect("Should be able to parse result");
     for doc in docs {
         let results = look_for(&doc, &looking_for);
+        for result in &results {
+            println!("Found: {:?}", result.doc);
+        }
+        let results = post_process(&results);
+        println!("And again:");
+        for result in &results {
+            println!("Found: {:?}", result.doc);
+        }
+
         let results = specify(&results, &specifiers);
         if ids.is_empty() {
             for result in results {

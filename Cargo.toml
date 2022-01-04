@@ -13,5 +13,6 @@ description = "yquery is a yaml-query command-line utility based on the idea of 
 [dependencies]
 
 yaml-rust = "0.4"
+linked-hash-map = "0.5.3"
 pest = "2.1.3"
 pest_derive = "2.1.0"

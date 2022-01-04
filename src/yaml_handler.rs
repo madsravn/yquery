@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use linked_hash_map::LinkedHashMap;
 use yaml_rust::yaml;
 
 #[derive(Clone)]
@@ -68,6 +69,34 @@ pub fn string_value(doc: &yaml::Yaml) -> String {
         yaml::Yaml::Null => String::from("Null"),
         yaml::Yaml::BadValue => String::from("BadValue"),
     }
+}
+
+pub fn post_process(named_documents: &Vec<NamedDocument>) -> Vec<NamedDocument> {
+    let mut vec = Vec::new();
+    for document in named_documents {
+        match document.doc {
+            yaml::Yaml::Array(ref a) => {
+                for x in a {
+                    match x {
+                        yaml::Yaml::Hash(ref _h) => {
+                            let new_document = NamedDocument {
+                                name: document.name.clone(),
+                                doc: x.clone(),
+                            };
+                            vec.push(new_document);
+                        },
+                        _ => {
+                            vec.push(document.clone());
+                        }
+                    }
+                }
+            },
+            _ => {
+                vec.push(document.clone());
+            },
+        }
+    }
+    vec
 }
 
 // TODO: Clean up variable names!
