@@ -15,6 +15,30 @@ pub fn contains_keys(keys: &Vec<String>, map: &HashMap<String, String>) -> bool 
 mod tests {
     use super::*;
     #[test]
+    fn contains_both_ways_is_equal() {
+        let map_one = HashMap::from([(String::from("foo"), String::from("1")), (String::from("bar"), String::from("2"))]);
+        let map_two = HashMap::from([(String::from("foo"), String::from("1")), (String::from("bar"), String::from("2"))]);
+
+        let c_test_one = contains(&map_one, &map_two);
+        let c_test_two = contains(&map_two, &map_one);
+
+        assert_eq!(c_test_one, true); 
+        assert_eq!(c_test_one, c_test_two);
+    }
+
+    #[test]
+    fn contains_both_ways_not_equal() {
+        let map_one = HashMap::from([(String::from("foo"), String::from("1")), (String::from("bar"), String::from("2"))]);
+        let map_two = HashMap::from([(String::from("foo"), String::from("1")), (String::from("bar"), String::from("2")), (String::from("baz"), String::from("3"))]);
+        let c_test_one = contains(&map_one, &map_two);
+        let c_test_two = contains(&map_two, &map_one);
+        assert_eq!(c_test_one, true);
+        assert_eq!(c_test_two, false);
+        assert_ne!(c_test_one, c_test_two);
+    }
+
+
+    #[test]
     fn contains_work() {
         let map_one = HashMap::from([(String::from("foo"), String::from("1")), (String::from("bar"), String::from("2"))]);
         let map_two = HashMap::from([(String::from("foo"), String::from("1")), (String::from("bar"), String::from("2")), (String::from("baz"), String::from("3"))]);

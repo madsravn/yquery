@@ -192,7 +192,6 @@ dependencies = [
 name = "yquery"
 version = "0.1.1"
 dependencies = [
- "linked-hash-map",
  "pest",
  "pest_derive",
  "yaml-rust",

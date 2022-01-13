@@ -1,5 +1,4 @@
 use std::collections::HashMap;
-use linked_hash_map::LinkedHashMap;
 use yaml_rust::yaml;
 
 #[derive(Clone)]

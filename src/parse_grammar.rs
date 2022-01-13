@@ -1,6 +1,7 @@
 use std::collections::HashMap;
 use pest::Parser;
 use pest_derive::Parser;
+use crate::utility::contains;
 
 #[derive(Parser)]
 #[grammar = "command_parser.pest"]
@@ -55,3 +56,94 @@ pub fn parse_input_specifier(input: &str) -> (Vec<String>, HashMap<String, Strin
     (value_vec, specifiers, id_vec)
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    fn vector_equal(one: &Vec<String>, two: &Vec<String>) -> bool {
+        if one.len() == two.len() {
+            let matching = one.iter().zip(two).filter(|&(a, b)| a == b).count() == one.len();
+            matching
+        } else {
+            false
+        }
+    }
+
+    fn hashmap_equal(one: &HashMap<String, String>, two: &HashMap<String, String>) -> bool {
+        let c = contains(one, two) && contains(two, one);
+        c
+    }
+
+
+    #[test]
+    fn test_vector_equal_equal() {
+        let vec_one = vec![String::from("one"), String::from("two"), String::from("three")];
+        let vec_two = vec![String::from("one"), String::from("two"), String::from("three")];
+
+        assert_eq!(vector_equal(&vec_one, &vec_two), true);
+        assert_eq!(vector_equal(&vec_two, &vec_one), true);
+        assert_eq!(vector_equal(&vec_two, &vec_two), true);
+        assert_eq!(vector_equal(&vec_one, &vec_one), true);
+
+    }
+
+    #[test]
+    fn test_vector_equal_not_equal() {
+        let vec_one = vec![String::from("one"), String::from("two"), String::from("three")];
+        let vec_two = vec![String::from("one"), String::from("three"), String::from("two")];
+        let vec_three = vec![String::from("one"), String::from("two"), String::from("three"), String::from("four")];
+        assert_eq!(vector_equal(&vec_one, &vec_one), true);
+        assert_eq!(vector_equal(&vec_two, &vec_two), true);
+        assert_eq!(vector_equal(&vec_three, &vec_three), true);
+        assert_eq!(vector_equal(&vec_one, &vec_two), false);
+        assert_eq!(vector_equal(&vec_two, &vec_one), false);
+        assert_eq!(vector_equal(&vec_one, &vec_three), false);
+        assert_eq!(vector_equal(&vec_three, &vec_one), false);
+        assert_eq!(vector_equal(&vec_two, &vec_three), false);
+        assert_eq!(vector_equal(&vec_three, &vec_two), false);
+    }
+    
+    #[test]
+    fn test_simple_search_query() {
+        let simple_query = "service";
+        let result = parse_input_specifier(simple_query);
+
+        let found_fields = vec![String::from("service")];
+        let found_specifiers: HashMap<String, String> = HashMap::new();
+        let found_ids: Vec<String> = Vec::new();
+
+        assert_eq!(vector_equal(&result.0, &found_fields), true);
+        assert_eq!(hashmap_equal(&result.1, &found_specifiers), true);
+        assert_eq!(vector_equal(&result.2, &found_ids), true);
+    }
+
+    #[test]
+    fn test_less_simple_search_query() {
+        let simple_query = "(service|state)";
+        let result = parse_input_specifier(simple_query);
+
+        let found_fields = vec![String::from("service"), String::from("state")];
+        let found_specifiers: HashMap<String, String> = HashMap::new();
+        let found_ids: Vec<String> = Vec::new();
+
+        assert_eq!(vector_equal(&result.0, &found_fields), true);
+        assert_eq!(hashmap_equal(&result.1, &found_specifiers), true);
+        assert_eq!(vector_equal(&result.2, &found_ids), true);
+    }
+
+    #[test]
+    fn test_less_simple_search_query_two() {
+        let simple_query = "(service|state|expression)";
+        let result = parse_input_specifier(simple_query);
+
+        let found_fields = vec![String::from("service"), String::from("state"), String::from("expression")];
+        let found_specifiers: HashMap<String, String> = HashMap::new();
+        let found_ids: Vec<String> = Vec::new();
+
+        assert_eq!(vector_equal(&result.0, &found_fields), true);
+        assert_eq!(hashmap_equal(&result.1, &found_specifiers), true);
+        assert_eq!(vector_equal(&result.2, &found_ids), true);
+    }
+
+
+}
+ 

@@ -59,14 +59,14 @@ fn run(path: &str, input: &str, debug: bool) -> Vec<String> {
     let docs = yaml::YamlLoader::load_from_str(&content).expect("Should be able to parse result");
     for doc in docs {
         let results = look_for(&doc, &looking_for);
-        for result in &results {
+        /*for result in &results {
             println!("Found: {:?}", result.doc);
-        }
+        }*/
         let results = post_process(&results);
-        println!("And again:");
+        /*println!("And again:");
         for result in &results {
             println!("Found: {:?}", result.doc);
-        }
+        }*/
 
         let results = specify(&results, &specifiers);
         if ids.is_empty() {
