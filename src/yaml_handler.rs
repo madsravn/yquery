@@ -1,3 +1,4 @@
+use crate::parse_grammar::FieldValueStruct;
 use std::collections::HashMap;
 use yaml_rust::yaml;
 
@@ -5,6 +6,36 @@ use yaml_rust::yaml;
 pub struct NamedDocument {
     pub name: String,
     pub doc: yaml::Yaml,
+}
+
+fn field_values_contain_key(field_values: &Vec<FieldValueStruct>, key: String) -> bool {
+    field_values
+        .iter()
+        .filter(|x| x.parent_found == true && x.child == key)
+        .count()
+        > 0
+}
+
+fn update_found_parent(parent: &String, key: &String, found_parent: bool) -> bool {
+    if found_parent {
+        true
+    } else {
+        let parent_found = parent == key;
+        parent_found
+    }
+}
+
+fn update_looking_for(field_values: &Vec<FieldValueStruct>, key: &String) -> Vec<FieldValueStruct> {
+    // TODO: A lot of 'to_string()'. Will that have an effect on performance?
+    let updated = field_values
+        .iter()
+        .map(|x| FieldValueStruct {
+            parent: x.parent.to_string(),
+            child: x.child.to_string(),
+            parent_found: update_found_parent(&x.parent, key, x.parent_found),
+        })
+        .collect();
+    updated
 }
 
 pub fn find_hashmapped_values(doc: &yaml::Yaml) -> HashMap<String, String> {
@@ -83,23 +114,23 @@ pub fn post_process(named_documents: &Vec<NamedDocument>) -> Vec<NamedDocument> 
                                 doc: x.clone(),
                             };
                             vec.push(new_document);
-                        },
+                        }
                         _ => {
                             vec.push(document.clone());
                         }
                     }
                 }
-            },
+            }
             _ => {
                 vec.push(document.clone());
-            },
+            }
         }
     }
     vec
 }
 
 // TODO: Clean up variable names!
-pub fn look_for(doc: &yaml::Yaml, looking_for: &Vec<String>) -> Vec<NamedDocument> {
+pub fn look_for(doc: &yaml::Yaml, looking_for: &Vec<FieldValueStruct>) -> Vec<NamedDocument> {
     match *doc {
         yaml::Yaml::Array(ref v) => {
             let mut vec = Vec::new();
@@ -118,14 +149,15 @@ pub fn look_for(doc: &yaml::Yaml, looking_for: &Vec<String>) -> Vec<NamedDocumen
                     .as_str()
                     .expect("Should be able to open key as string")
                     .to_string();
-                if looking_for.contains(&key) {
+                if field_values_contain_key(looking_for, key.clone()) {
                     let named_document = NamedDocument {
                         name: key.to_string(),
                         doc: v.clone(),
                     };
                     vec.push(named_document);
                 }
-                let values = look_for(v, looking_for);
+                let updated_looking_for = update_looking_for(&looking_for, &key);
+                let values = look_for(v, &updated_looking_for);
                 for e in values {
                     vec.push(e);
                 }

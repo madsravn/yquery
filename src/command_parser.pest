@@ -9,9 +9,11 @@ char_equal = { chars_with_numbers ~ "=" ~ chars_with_numbers | comma }
 chars = { char+ }
 
 
-value = { chars | separator }
+value = { chars_with_numbers | separator }
 id_value = { chars | comma | space } // Is this a pretty solution with the space? 
-fields = { "(" ~ value+ ~ ")" | value } // This could probably be done smarter. 
+value_with_parent = { "<" ~ chars_with_numbers ~ ">" ~ chars_with_numbers | separator }
+field_value = { value | value_with_parent }
+fields = { "(" ~ field_value+ ~ ")" | field_value } // This could probably be done smarter. 
 
 
 equal_value = { char_equal+ | comma }

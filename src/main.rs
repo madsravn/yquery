@@ -7,11 +7,10 @@ pub mod utility;
 pub mod yaml_handler;
 use parse_grammar::parse_input_specifier;
 use utility::{contains, contains_keys};
-use yaml_handler::{find_hashmapped_values, look_for, pretty_print, NamedDocument, post_process};
+use yaml_handler::{find_hashmapped_values, look_for, post_process, pretty_print, NamedDocument};
 
 extern crate pest;
 extern crate pest_derive;
-
 
 fn specify(docs: &Vec<NamedDocument>, specifiers: &HashMap<String, String>) -> Vec<NamedDocument> {
     let mut new_docs = Vec::new();
@@ -109,20 +108,29 @@ mod tests {
         let simple_query = "service";
         let document = "documents/verify_apache.yaml";
         let result = run(document, simple_query, false);
-        let assumed_result = vec!["service: { name: httpd, state: started}", "service: { name: httpd, state: restarted}"];
-        let matching = result.iter().zip(&assumed_result).filter(|&(a, b)| a == b).count();
+        let assumed_result = vec![
+            "service: { name: httpd, state: started}",
+            "service: { name: httpd, state: restarted}",
+        ];
+        let matching = result
+            .iter()
+            .zip(&assumed_result)
+            .filter(|&(a, b)| a == b)
+            .count();
         assert_eq!(matching, 2);
     }
-    
+
     #[test]
     fn test_simple_search_query_with_id() {
         let simple_query = "service.name";
         let document = "documents/verify_apache.yaml";
         let result = run(document, simple_query, false);
         let assumed_result = vec!["httpd", "httpd"];
-        let matching = result.iter().zip(&assumed_result).filter(|&(a, b)| a == b).count();
+        let matching = result
+            .iter()
+            .zip(&assumed_result)
+            .filter(|&(a, b)| a == b)
+            .count();
         assert_eq!(matching, 2);
     }
-
 }
-
