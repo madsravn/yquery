@@ -58,14 +58,7 @@ fn run(path: &str, input: &str, debug: bool) -> Vec<String> {
     let docs = yaml::YamlLoader::load_from_str(&content).expect("Should be able to parse result");
     for doc in docs {
         let results = look_for(&doc, &looking_for);
-        /*for result in &results {
-            println!("Found: {:?}", result.doc);
-        }*/
         let results = post_process(&results);
-        /*println!("And again:");
-        for result in &results {
-            println!("Found: {:?}", result.doc);
-        }*/
 
         let results = specify(&results, &specifiers);
         if ids.is_empty() {
@@ -87,6 +80,7 @@ fn run(path: &str, input: &str, debug: bool) -> Vec<String> {
 }
 
 // TODO: Implement clap
+// TODO: Implement opening multiple files instead of just one
 fn main() {
     let args: Vec<_> = env::args().collect();
     if args.len() < 2 {
