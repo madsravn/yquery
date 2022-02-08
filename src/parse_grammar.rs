@@ -111,7 +111,12 @@ mod tests {
 
     fn vector_child_value_equal(one: &Vec<FieldValueStruct>, two: &Vec<FieldValueStruct>) -> bool {
         if one.len() == two.len() {
-            let matching = one.iter().zip(two).filter(|&(a, b)| a.child == b.child).count() == one.len();
+            let matching = one
+                .iter()
+                .zip(two)
+                .filter(|&(a, b)| a.child == b.child)
+                .count()
+                == one.len();
             matching
         } else {
             false
@@ -201,8 +206,8 @@ mod tests {
         let result = parse_input_specifier(simple_query);
 
         let found_fields = vec![
-            create_field_value_struct_from_string("service"), 
-            create_field_value_struct_from_string("state")
+            create_field_value_struct_from_string("service"),
+            create_field_value_struct_from_string("state"),
         ];
         let found_specifiers: HashMap<String, String> = HashMap::new();
         let found_ids: Vec<String> = Vec::new();
