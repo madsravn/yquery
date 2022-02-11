@@ -2,7 +2,7 @@ use crate::parse_grammar::FieldValueStruct;
 use std::collections::HashMap;
 use yaml_rust::yaml;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct NamedDocument {
     pub name: String,
     pub doc: yaml::Yaml,
@@ -38,11 +38,11 @@ fn update_looking_for(field_values: &Vec<FieldValueStruct>, key: &String) -> Vec
     updated
 }
 
-pub fn find_hashmapped_values(doc: &yaml::Yaml) -> HashMap<String, String> {
-    let mut found = HashMap::new();
+pub fn find_hashmapped_values(doc: &yaml::Yaml) -> HashMap<String, Vec<String>> {
+    let mut found: HashMap<String, Vec<String>> = HashMap::new();
     if let yaml::Yaml::Hash(ref h) = doc {
         for (k, v) in h.iter() {
-            found.insert(string_value(k), string_value(v));
+            found.insert(string_value(k)[0].to_string(), string_value(v));
         }
     }
     found
@@ -87,17 +87,26 @@ pub fn pretty_print(doc: &yaml::Yaml) -> String {
     }
 }
 
-pub fn string_value(doc: &yaml::Yaml) -> String {
+pub fn string_value(doc: &yaml::Yaml) -> Vec<String> {
     match doc {
-        yaml::Yaml::Array(ref _v) => String::from("Array"),
-        yaml::Yaml::Hash(ref _h) => String::from("Hash"),
-        yaml::Yaml::String(ref s) => s.to_string(),
-        yaml::Yaml::Integer(ref i) => i.to_string(),
-        yaml::Yaml::Real(ref r) => r.to_string(),
-        yaml::Yaml::Boolean(ref b) => b.to_string(),
-        yaml::Yaml::Alias(ref a) => a.to_string(),
-        yaml::Yaml::Null => String::from("Null"),
-        yaml::Yaml::BadValue => String::from("BadValue"),
+        yaml::Yaml::Array(ref v) => {
+            let mut vec = Vec::new();
+            for e in v {
+                let values = string_value(e);
+                for value in values {
+                    vec.push(value);
+                }
+            }
+            vec
+        }
+        yaml::Yaml::Hash(ref _h) => vec![String::from("Hash")],
+        yaml::Yaml::String(ref s) => vec![s.to_string()],
+        yaml::Yaml::Integer(ref i) => vec![i.to_string()],
+        yaml::Yaml::Real(ref r) => vec![r.to_string()],
+        yaml::Yaml::Boolean(ref b) => vec![b.to_string()],
+        yaml::Yaml::Alias(ref a) => vec![a.to_string()],
+        yaml::Yaml::Null => vec![String::from("Null")],
+        yaml::Yaml::BadValue => vec![String::from("BadValue")],
     }
 }
 
@@ -107,8 +116,23 @@ pub fn post_process(named_documents: &Vec<NamedDocument>) -> Vec<NamedDocument> 
         match document.doc {
             yaml::Yaml::Array(ref a) => {
                 for x in a {
+                    // TODO: This is ugly - and not exhaustive
                     match x {
                         yaml::Yaml::Hash(ref _h) => {
+                            let new_document = NamedDocument {
+                                name: document.name.clone(),
+                                doc: x.clone(),
+                            };
+                            vec.push(new_document);
+                        }
+                        yaml::Yaml::String(ref _s) => {
+                            let new_document = NamedDocument {
+                                name: document.name.clone(),
+                                doc: x.clone(),
+                            };
+                            vec.push(new_document);
+                        }
+                        yaml::Yaml::Integer(ref _i) => {
                             let new_document = NamedDocument {
                                 name: document.name.clone(),
                                 doc: x.clone(),

@@ -6,7 +6,7 @@ pub mod parse_grammar;
 pub mod utility;
 pub mod yaml_handler;
 use parse_grammar::parse_input_specifier;
-use utility::{contains, contains_keys};
+use utility::{contains_keys, contains_map};
 use yaml_handler::{find_hashmapped_values, look_for, post_process, pretty_print, NamedDocument};
 
 extern crate pest;
@@ -16,7 +16,7 @@ fn specify(docs: &Vec<NamedDocument>, specifiers: &HashMap<String, String>) -> V
     let mut new_docs = Vec::new();
     for doc in docs {
         let found = find_hashmapped_values(&doc.doc);
-        if contains(specifiers, &found) {
+        if contains_map(specifiers, &found) {
             new_docs.push(doc.clone());
         }
     }
@@ -25,15 +25,17 @@ fn specify(docs: &Vec<NamedDocument>, specifiers: &HashMap<String, String>) -> V
 
 fn identify(docs: &Vec<NamedDocument>, ids: &Vec<String>) -> Vec<String> {
     let mut results = Vec::new();
+    // TODO: Take one Vec<String> out of found and apply value to it.
     for doc in docs {
         let found = find_hashmapped_values(&doc.doc);
         if contains_keys(ids, &found) {
-            let value = ids
+            let mut value = ids
                 .iter()
-                .map(|v| found.get(v).expect("Value should exist").to_string())
-                .collect::<Vec<String>>()
-                .join(", ");
-            results.push(value);
+                .map(|v| found.get(v).expect("Value should exist"))
+                .flatten()
+                .map(|v| v.to_string())
+                .collect::<Vec<String>>();
+            results.append(&mut value);
         }
     }
 
