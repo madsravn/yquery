@@ -20,7 +20,7 @@ yquery is a command-line tool which currently accepts one file and a 'search que
 
 ### Examples
 
-A 'search query' consists of three parts: A element name, a child specifier and id selection. It is given in the form `ElementA[childname=name].id`. You can have multiple occurrences of each part: `(ElementA|ElementB)[childname=name,childage=age].(id,name)`. If only the element name part is given, the output will the entire element found, as seen in the first example below. If the id selection part is specified, you will only receive those specifically, as seen in the second example below.
+A 'search query' consists of four parts: A parent name, an element name, a child specifier and id selection. It is given in the form `<Parent>ElementA[childname=name].id`. You can have multiple occurrences of each part: `(<Parent>ElementA|<Parent>ElementB)[childname=name,childage=age].(id,name)`. If only the element name part is given, the output will the entire element found, as seen in the first example below. If the id selection part is specified, you will only receive those specifically, as seen in the second example below.
 
 Example with no id specifier
 ```console
